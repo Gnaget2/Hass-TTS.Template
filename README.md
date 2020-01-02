@@ -11,4 +11,5 @@ Create TTS messages and send to designated media-players
 Its created as a [Home Assistant package](https://home-assistant.io/docs/configuration/packages/)
 
 ## Screenshot from HASS GUI
-<img src="https://github.com/Gnaget2/HarmonyHub-Remote/blob/master/Images/Screenshot.png" alt="Screenshot" />
+<img src="https://github.com/Gnaget2/Hass-TTS.Template/blob/master/tts.png" alt="Screenshot" />
+
