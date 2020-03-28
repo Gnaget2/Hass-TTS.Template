@@ -1,0 +1,140 @@
+##################################################################################################
+# TTS package  with no sonos                                                                     #
+# Version 1.0  last changed 2020-03-28                                                           #
+# Created for and tested with vardagsrum Assistant Hassio version 0.103.5                        #
+# Creator Mikael Danell SHG                                                                      #
+##################################################################################################
+
+# Bolean section
+input_boolean:
+  allrum:
+    name: Allrum
+    initial: on
+    icon: mdi:check-outline
+  sovrum:
+    name: Sovrum
+    initial: on
+    icon: mdi:check-outline
+  vardagsrum:
+    name: Vardsgrummet
+    initial: on
+    icon: mdi:check-outline
+
+# input section
+input_text:
+  tts1:
+    name: TTS 1
+    icon: mdi:cast-audio
+  tts2:
+    name: TTS 2
+    icon: mdi:cast-audio
+  tts3:
+    name: TTS 3
+    icon: mdi:cast-audio
+  tts4:
+    name: TTS 4
+    icon: mdi:cast-audio
+
+input_number:
+  tts_volum:
+    name: Volym
+    icon: mdi:volume-high
+    min: 10
+    max: 100
+    step: 10
+    unit_of_measurement: '%'
+
+# Script section
+script:
+# turns on the heater and activates the trigger that will turn it off
+  tts1_on:
+    sequence:
+    - service: media_player.volume_set
+      data_template:
+        entity_id: >-
+         {{states.sensor.ttsplayers.state}}
+        volume_level: '{{ (states.input_number.tts_volum.state | float / 100) | round(1) }}'
+    - service: tts.google_say
+      data_template:
+        entity_id: >-
+         {{states.sensor.ttsplayers.state}}
+        message: >-
+         {{states.input_text.tts1.state}} 
+
+  tts2_on:
+    sequence:
+    - service: media_player.volume_set
+      data_template:
+        entity_id: >-
+         {{states.sensor.ttsplayers.state}}
+        volume_level: '{{ (states.input_number.tts_volum.state | float / 100) | round(1) }}'
+    - service: tts.google_say
+      data_template:
+        entity_id: >-
+         {{states.sensor.ttsplayers.state}}
+        message: >-
+         {{states.input_text.tts2.state}} 
+
+  tts3_on:
+    sequence:
+    - service: media_player.volume_set
+      data_template:
+        entity_id: >-
+         {{states.sensor.ttsplayers.state}}
+        volume_level: '{{ (states.input_number.tts_volum.state | float / 100) | round(1) }}'
+    - service: tts.google_say
+      data_template:
+        entity_id: >-
+         {{states.sensor.ttsplayers.state}}
+        message: >-
+         {{states.input_text.tts3.state}} 
+
+  tts4_on:
+    sequence:
+    - service: media_player.volume_set
+      data_template:
+        entity_id: >-
+         {{states.sensor.ttsplayers.state}}
+        volume_level: '{{ (states.input_number.tts_volum.state | float / 100) | round(1) }}'
+    - service: tts.google_say
+      data_template:
+        entity_id: >-
+         {{states.sensor.ttsplayers.state}}
+        message: >-
+         {{states.input_text.tts4.state}} 
+
+
+# Sensor section
+sensor:
+  - platform: template
+    sensors:
+      ttsplayers:
+        friendly_name: 'TTS Players'
+        value_template: >-
+          {% if is_state("input_boolean.allrum", "on") and is_state("input_boolean.sovrum", "on") and is_state("input_boolean.vardagsrum", "on") %}
+            media_player.allrum, media_player.sovrum, media_player.vardagsrum
+          {% else %}
+          {% if is_state("input_boolean.allrum", "off") and is_state("input_boolean.sovrum", "on") and is_state("input_boolean.vardagsrum", "on") %}
+            media_player.sovrum, media_player.vardagsrum
+          {% else %}
+          {% if is_state("input_boolean.allrum", "on") and is_state("input_boolean.sovrum", "off") and is_state("input_boolean.vardagsrum", "on") %}
+            media_player.allrum, media_player.vardagsrum
+          {% else %}
+          {% if is_state("input_boolean.allrum", "on") and is_state("input_boolean.sovrum", "on") and is_state("input_boolean.vardagsrum", "off") %}
+            media_player.allrum, media_player.sovrum
+          {% else %}
+          {% if is_state("input_boolean.allrum", "off") and is_state("input_boolean.sovrum", "off") and is_state("input_boolean.vardagsrum", "on") %}
+            media_player.vardagsrum
+          {% else %}
+          {% if is_state("input_boolean.allrum", "on") and is_state("input_boolean.sovrum", "off") and is_state("input_boolean.vardagsrum", "off") %}
+            media_player.allrum
+          {% else %}
+          {% if is_state("input_boolean.allrum", "off") and is_state("input_boolean.sovrum", "on") and is_state("input_boolean.vardagsrum", "off") %}
+            media_player.sovrum
+          {% endif %}
+          {% endif %}
+          {% endif %}
+          {% endif %}
+          {% endif %}
+          {% endif %}
+          {% endif %}
